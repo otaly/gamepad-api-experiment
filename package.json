@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/preset-react": "^7.16.7",
+    "@emotion/babel-plugin": "^11.7.2",
+    "@emotion/react": "^11.7.1",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
@@ -17,9 +20,9 @@
     "web-vitals": "^2.1.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
     "eject": "react-scripts eject",
     "fix:eslint": "eslint . --ext .js,.ts,.jsx,.tsx --fix",
     "fix:prettier": "prettier --write"
@@ -37,6 +40,7 @@
     ]
   },
   "devDependencies": {
+    "@craco/craco": "^6.4.3",
     "@typescript-eslint/eslint-plugin": "^5.8.1",
     "@typescript-eslint/parser": "^5.8.1",
     "eslint": "^8.5.0",
