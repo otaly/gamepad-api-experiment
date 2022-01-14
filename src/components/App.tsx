@@ -37,14 +37,18 @@ const App = () => {
 
     const loader = new GLTFLoader();
     let model: GLTF;
+    const btns: { [key: string]: THREE.Mesh } = {};
     loader.load(gamepadModel, (gltf) => {
-      gltf.scene.traverse((object) => {
-        if (object instanceof THREE.Mesh) {
-          object.castShadow = true;
+      gltf.scene.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+          child.castShadow = true;
+          console.log(child.name);
+          btns[child.name] = child;
         }
       });
       scene.add(gltf.scene);
       model = gltf;
+      btns['circle_btn'].position.y -= 0.06;
     });
 
     const geometry = new THREE.PlaneGeometry(600, 600, 16);
@@ -64,7 +68,7 @@ const App = () => {
     const tick = () => {
       renderer.render(scene, camera);
       if (model) {
-        model.scene.rotation.y += 0.01;
+        model.scene.rotation.y -= 0.005;
       }
       animationRequestId = requestAnimationFrame(tick);
     };
