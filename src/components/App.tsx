@@ -1,13 +1,14 @@
 import { css } from '@emotion/react';
-import React, { useEffect, useRef } from 'react';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import gamepadModel from 'src/assets/models/gamepad.glb';
+import React, { useEffect, useRef, useState } from 'react';
+import { Dualshock4Model } from 'src/models/dualshock4Model';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 const App = () => {
+  const [{ isGamepadConnected }, setState] = useState({
+    isGamepadConnected: false,
+  });
+  let gamepadLastState: boolean[] | null = null;
   const canvas = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     if (!canvas.current) {
@@ -35,48 +36,52 @@ const App = () => {
     scene.add(light);
     light.position.set(0, 10, 5);
 
-    const loader = new GLTFLoader();
-    let model: GLTF;
-    const btns: { [key: string]: THREE.Mesh } = {};
-    loader.load(gamepadModel, (gltf) => {
-      gltf.scene.traverse((child) => {
-        if (child instanceof THREE.Mesh) {
-          child.castShadow = true;
-          console.log(child.name);
-          btns[child.name] = child;
-        }
-      });
-      scene.add(gltf.scene);
-      model = gltf;
-      btns['circle_btn'].position.y -= 0.06;
-    });
+    addPlane(scene);
 
-    const geometry = new THREE.PlaneGeometry(600, 600, 16);
-    // マテリアルを作成
-    const material = new THREE.MeshPhongMaterial({
-      color: 0xffffff,
-    });
-    // メッシュを作成
-    const mesh = new THREE.Mesh(geometry, material);
-    mesh.receiveShadow = true;
-    // 3D空間にメッシュを追加
-    scene.add(mesh);
-    mesh.rotateX(-(Math.PI / 2));
-    mesh.position.set(mesh.position.x, mesh.position.y - 2, mesh.position.z);
+    const operateGamepadBtns = (
+      listener: (state: boolean[], lastState: boolean[]) => void
+    ) => {
+      const gamepads = getGamepads();
+      if (gamepads.length === 0) {
+        return;
+      }
+      const gamepad = gamepads[0];
+      console.log(gamepad.axes);
+      const state = gamepad.buttons.map((button) => button.pressed);
+      const lastState = gamepadLastState ?? state.map(() => false);
+      listener(state, lastState);
+      gamepadLastState = state;
+    };
+
+    const gamepadModel = new Dualshock4Model();
 
     let animationRequestId: number | null = null;
     const tick = () => {
+      gamepadModel.update();
+
+      operateGamepadBtns((state, lastState) => {
+        state.forEach((pressed, index) => {
+          const btnModel = gamepadModel.btns[index];
+          if (!btnModel) {
+            return;
+          }
+          const wasPressed = lastState[index];
+          if (pressed && !wasPressed) {
+            btnModel.position.y -= 0.06;
+          } else if (!pressed && wasPressed) {
+            btnModel.position.y += 0.06;
+          }
+        });
+      });
+
       renderer.render(scene, camera);
-      if (model) {
-        model.scene.rotation.y -= 0.005;
-      }
       animationRequestId = requestAnimationFrame(tick);
     };
 
     const onResize = () => {
       // サイズを取得
-      const width = window.innerWidth;
-      const height = window.innerHeight;
+      const width = document.documentElement.clientWidth;
+      const height = document.documentElement.clientHeight;
 
       // レンダラーのサイズを調整する
       renderer.setPixelRatio(window.devicePixelRatio);
@@ -89,24 +94,74 @@ const App = () => {
 
     tick();
     onResize();
-    window.addEventListener('resize', onResize);
+
+    const windowListenerMap: Record<
+      'resize' | 'gamepadconnected' | 'gamepaddisconnected',
+      ((ev: any) => void) | null
+    > = { resize: null, gamepadconnected: null, gamepaddisconnected: null };
+    windowListenerMap.resize = onResize;
+
+    const gamepads = getGamepads();
+    setState((s) => ({ ...s, isGamepadConnected: gamepads.length > 0 }));
+    if (gamepads.length > 0) gamepadModel.add(scene);
+    windowListenerMap.gamepadconnected = () => {
+      setState((s) => ({ ...s, isGamepadConnected: true }));
+      gamepadModel.add(scene);
+    };
+    windowListenerMap.gamepaddisconnected = () => {
+      setState((s) => ({
+        ...s,
+        isGamepadConnected: getGamepads().length > 0,
+      }));
+      gamepadModel.remove(scene);
+    };
+
+    Object.entries(windowListenerMap).forEach(([evName, listener]) => {
+      if (listener)
+        window.addEventListener(evName as keyof WindowEventMap, listener);
+    });
 
     return () => {
-      window.removeEventListener('resize', onResize);
+      Object.entries(windowListenerMap).forEach(([evName, listener]) => {
+        if (listener) {
+          window.removeEventListener(evName as keyof WindowEventMap, listener);
+          windowListenerMap[evName as keyof typeof windowListenerMap] = null;
+        }
+      });
       if (animationRequestId != null) {
         cancelAnimationFrame(animationRequestId);
       }
     };
-  });
+  }, []);
 
   return (
     <>
       <p css={css({ fontWeight: 'bold', fontSize: '3rem' })}>
         Gamepad API Experiment
       </p>
+      <p>{isGamepadConnected ? 'connected' : 'disconnected'}</p>
       <canvas ref={canvas}></canvas>
     </>
   );
+};
+
+const getGamepads = () =>
+  [...navigator.getGamepads()].filter(Boolean) as Gamepad[];
+
+const addPlane = (scene: THREE.Scene) => {
+  const geometry = new THREE.PlaneGeometry(600, 600, 16);
+  // マテリアルを作成
+  const material = new THREE.MeshPhongMaterial({
+    color: 0xffffff,
+  });
+  // メッシュを作成
+  const mesh = new THREE.Mesh(geometry, material);
+  mesh.receiveShadow = true;
+  // 3D空間にメッシュを追加
+  scene.add(mesh);
+  mesh.rotateX(-(Math.PI / 2));
+  mesh.position.y -= 2;
+  return mesh;
 };
 
 export default App;
