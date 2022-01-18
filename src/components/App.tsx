@@ -46,7 +46,6 @@ const App = () => {
         return;
       }
       const gamepad = gamepads[0];
-      console.log(gamepad.axes);
       const state = gamepad.buttons.map((button) => button.pressed);
       const lastState = gamepadLastState ?? state.map(() => false);
       listener(state, lastState);
@@ -73,6 +72,20 @@ const App = () => {
           }
         });
       });
+
+      const gamepad = getGamepads()[0];
+      if (gamepad) {
+        const lStick = gamepadModel.btnMap['analog_stick_l'];
+        const rStick = gamepadModel.btnMap['analog_stick_r'];
+        const MAX_ANGLE = Math.PI / 9;
+        [lStick, rStick].forEach((stick, index) =>
+          stick?.rotation.set(
+            -(gamepad.axes[0 + index * 2] * MAX_ANGLE),
+            stick.rotation.y,
+            -(gamepad.axes[1 + index * 2] * MAX_ANGLE)
+          )
+        );
+      }
 
       renderer.render(scene, camera);
       animationRequestId = requestAnimationFrame(tick);

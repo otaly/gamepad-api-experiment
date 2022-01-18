@@ -42,7 +42,7 @@ export class Dualshock4Model implements GamepadModel {
 
   update() {
     if (this.gltf) {
-      this.gltf.scene.rotation.y -= 0.005;
+      this.gltf.scene.rotation.y -= 0.001;
     }
   }
 
@@ -62,7 +62,7 @@ export class Dualshock4Model implements GamepadModel {
             return;
           }
           child.castShadow = true;
-          // child.receiveShadow = true;
+          child.receiveShadow = true;
           console.log(child.name);
           if (child.name in this.btnMap) {
             this.btnMap[child.name] = child;
