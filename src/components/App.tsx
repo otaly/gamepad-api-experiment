@@ -1,132 +1,34 @@
 import { css } from '@emotion/react';
-import React, { useEffect, useRef, useState } from 'react';
-import { Dualshock4Model } from 'src/models/dualshock4Model';
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { MeshReflectorMaterial, OrbitControls } from '@react-three/drei';
+import { Canvas } from '@react-three/fiber';
+import React, { Suspense, useEffect, useState } from 'react';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import gamepadModel from 'src/assets/models/gamepad.glb';
+import { getGamepads } from 'src/util/GetGamepad';
+import { GamepadModel } from '../models/Gamepad';
 
 const App = () => {
   const [{ isGamepadConnected }, setState] = useState({
     isGamepadConnected: false,
   });
-  let gamepadLastState: boolean[] | null = null;
-  const canvas = useRef<HTMLCanvasElement>(null);
+
   useEffect(() => {
-    if (!canvas.current) {
-      return;
-    }
-    const renderer = new THREE.WebGLRenderer({
-      canvas: canvas.current,
-      antialias: true,
-    });
-    renderer.shadowMap.enabled = true;
-
-    const scene = new THREE.Scene();
-
-    const camera = new THREE.PerspectiveCamera(45, 1.0);
-    camera.position.set(0, 7, 15);
-
-    const controls = new OrbitControls(camera, document.body);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.2;
-
-    const light = new THREE.SpotLight(0xfff9ed, 1, 30, Math.PI / 4, 1, 0.5);
-    light.castShadow = true;
-    light.shadow.mapSize.width = 2048;
-    light.shadow.mapSize.height = 2048;
-    scene.add(light);
-    light.position.set(0, 10, 5);
-
-    addPlane(scene);
-
-    const operateGamepadBtns = (
-      listener: (state: boolean[], lastState: boolean[]) => void
-    ) => {
-      const gamepads = getGamepads();
-      if (gamepads.length === 0) {
-        return;
-      }
-      const gamepad = gamepads[0];
-      const state = gamepad.buttons.map((button) => button.pressed);
-      const lastState = gamepadLastState ?? state.map(() => false);
-      listener(state, lastState);
-      gamepadLastState = state;
-    };
-
-    const gamepadModel = new Dualshock4Model();
-
-    let animationRequestId: number | null = null;
-    const tick = () => {
-      gamepadModel.update();
-
-      operateGamepadBtns((state, lastState) => {
-        state.forEach((pressed, index) => {
-          const btnModel = gamepadModel.btns[index];
-          if (!btnModel) {
-            return;
-          }
-          const wasPressed = lastState[index];
-          if (pressed && !wasPressed) {
-            btnModel.position.y -= 0.06;
-          } else if (!pressed && wasPressed) {
-            btnModel.position.y += 0.06;
-          }
-        });
-      });
-
-      const gamepad = getGamepads()[0];
-      if (gamepad) {
-        const lStick = gamepadModel.btnMap['analog_stick_l'];
-        const rStick = gamepadModel.btnMap['analog_stick_r'];
-        const MAX_ANGLE = Math.PI / 9;
-        [lStick, rStick].forEach((stick, index) =>
-          stick?.rotation.set(
-            -(gamepad.axes[0 + index * 2] * MAX_ANGLE),
-            stick.rotation.y,
-            -(gamepad.axes[1 + index * 2] * MAX_ANGLE)
-          )
-        );
-      }
-
-      renderer.render(scene, camera);
-      animationRequestId = requestAnimationFrame(tick);
-    };
-
-    const onResize = () => {
-      // サイズを取得
-      const width = document.documentElement.clientWidth;
-      const height = document.documentElement.clientHeight;
-
-      // レンダラーのサイズを調整する
-      renderer.setPixelRatio(window.devicePixelRatio);
-      renderer.setSize(width, height);
-
-      // カメラのアスペクト比を正す
-      camera.aspect = width / height;
-      camera.updateProjectionMatrix();
-    };
-
-    tick();
-    onResize();
-
     const windowListenerMap: Record<
-      'resize' | 'gamepadconnected' | 'gamepaddisconnected',
-      ((ev: any) => void) | null
-    > = { resize: null, gamepadconnected: null, gamepaddisconnected: null };
-    windowListenerMap.resize = onResize;
+      'gamepadconnected' | 'gamepaddisconnected',
+      ((ev: Event) => void) | null
+    > = { gamepadconnected: null, gamepaddisconnected: null };
 
     const gamepads = getGamepads();
     setState((s) => ({ ...s, isGamepadConnected: gamepads.length > 0 }));
-    if (gamepads.length > 0) gamepadModel.add(scene);
     windowListenerMap.gamepadconnected = () => {
       setState((s) => ({ ...s, isGamepadConnected: true }));
-      gamepadModel.add(scene);
     };
     windowListenerMap.gamepaddisconnected = () => {
       setState((s) => ({
         ...s,
         isGamepadConnected: getGamepads().length > 0,
       }));
-      gamepadModel.remove(scene);
     };
 
     Object.entries(windowListenerMap).forEach(([evName, listener]) => {
@@ -141,9 +43,6 @@ const App = () => {
           windowListenerMap[evName as keyof typeof windowListenerMap] = null;
         }
       });
-      if (animationRequestId != null) {
-        cancelAnimationFrame(animationRequestId);
-      }
     };
   }, []);
 
@@ -153,28 +52,58 @@ const App = () => {
         Gamepad API Experiment
       </p>
       <p>{isGamepadConnected ? 'connected' : 'disconnected'}</p>
-      <canvas ref={canvas}></canvas>
+      <Canvas shadows camera={{ position: [0, 7, 15], fov: 45, aspect: 1 }}>
+        <color attach="background" args={['black']} />
+        <fog attach="fog" args={['#000000', 20, 80]} />
+        <spotLight
+          castShadow
+          position={[0, 10, 5]}
+          color={0xfff9ed}
+          intensity={1}
+          distance={25}
+          angle={Math.PI / 4}
+          penumbra={1}
+          decay={0.5}
+          shadow-mapSize={[2048, 2048]}
+        ></spotLight>
+        <ambientLight intensity={0.05}></ambientLight>
+        <Suspense fallback={null}>
+          <GamepadModel url={gamepadModel} castShadow receiveShadow />
+          <mesh
+            receiveShadow
+            rotation={[-Math.PI / 2, 0, 0]}
+            position={[0, -1.5, 0]}
+          >
+            <planeGeometry args={[100, 100]} />
+            <MeshReflectorMaterial
+              mirror={0.4}
+              blur={[400, 100]}
+              resolution={1024}
+              mixBlur={1}
+              opacity={2}
+              depthScale={1.1}
+              minDepthThreshold={0.4}
+              maxDepthThreshold={1.25}
+              roughness={0.7}
+            />
+            {/* <meshPhongMaterial color={0xffffff} /> */}
+          </mesh>
+          {/* <Environment preset="night"></Environment> */}
+        </Suspense>
+        <OrbitControls
+          zoomSpeed={0.4}
+          autoRotate
+          autoRotateSpeed={-0.4}
+          rotateSpeed={1}
+          enableDamping
+          dampingFactor={0.2}
+          minPolarAngle={-Math.PI / 2}
+          maxPolarAngle={Math.PI / 1.7}
+          makeDefault
+        />
+      </Canvas>
     </>
   );
-};
-
-const getGamepads = () =>
-  [...navigator.getGamepads()].filter(Boolean) as Gamepad[];
-
-const addPlane = (scene: THREE.Scene) => {
-  const geometry = new THREE.PlaneGeometry(600, 600, 16);
-  // マテリアルを作成
-  const material = new THREE.MeshPhongMaterial({
-    color: 0xffffff,
-  });
-  // メッシュを作成
-  const mesh = new THREE.Mesh(geometry, material);
-  mesh.receiveShadow = true;
-  // 3D空間にメッシュを追加
-  scene.add(mesh);
-  mesh.rotateX(-(Math.PI / 2));
-  mesh.position.y -= 2;
-  return mesh;
 };
 
 export default App;
