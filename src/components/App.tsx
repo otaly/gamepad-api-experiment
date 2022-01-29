@@ -9,8 +9,9 @@ import { getGamepads } from 'src/util/GetGamepad';
 import { GamepadModel } from '../models/Gamepad';
 
 const App = () => {
-  const [{ isGamepadConnected }, setState] = useState({
+  const [{ isGamepadConnected, checked }, setState] = useState({
     isGamepadConnected: false,
+    checked: false,
   });
 
   useEffect(() => {
@@ -46,27 +47,72 @@ const App = () => {
     };
   }, []);
 
+  const lights = [
+    <>
+      <spotLight
+        castShadow
+        position={[0, 10, 5]}
+        color={0xfff9ed}
+        intensity={1}
+        distance={25}
+        angle={Math.PI / 4}
+        penumbra={1}
+        decay={0.5}
+        shadow-mapSize={[2048, 2048]}
+      ></spotLight>
+      <ambientLight intensity={0.05}></ambientLight>
+    </>,
+    <>
+      <spotLight
+        castShadow
+        position={[10, 10, 5]}
+        color={0xffedd9}
+        intensity={1.3}
+        distance={25}
+        angle={Math.PI / 4}
+        penumbra={1}
+        decay={0.6}
+        shadow-mapSize={[2048, 2048]}
+      ></spotLight>
+      <directionalLight
+        position={[-7, 2, -5]}
+        color={0xabe2ff}
+        intensity={0.6}
+      ></directionalLight>
+    </>,
+  ];
+  const light = lights[checked ? 1 : 0];
+
+  const status = isGamepadConnected ? (
+    <p
+      className="text-green-400 text-4xl text-center animate-fadeout"
+      css={css({ animationDelay: '1s' })}
+    >
+      Connected!!!
+    </p>
+  ) : (
+    <p className="text-white text-4xl text-center animate-pulse">
+      Disconnected
+    </p>
+  );
+
   return (
     <>
-      <p css={css({ fontWeight: 'bold', fontSize: '3rem' })}>
-        Gamepad API Experiment
-      </p>
-      <p>{isGamepadConnected ? 'connected' : 'disconnected'}</p>
+      <div className="absolute w-full top-0 z-10 p-4 pointer-events-none">
+        <p className="text-5xl font-medium text-white mb-4">
+          Gamepad API Experiment
+        </p>
+        <input
+          className="pointer-events-auto"
+          type="checkbox"
+          onChange={(event) => setState((s) => ({ ...s, checked: !checked }))}
+        />
+        {status}
+      </div>
       <Canvas shadows camera={{ position: [0, 7, 15], fov: 45, aspect: 1 }}>
         <color attach="background" args={['black']} />
-        <fog attach="fog" args={['#000000', 20, 80]} />
-        <spotLight
-          castShadow
-          position={[0, 10, 5]}
-          color={0xfff9ed}
-          intensity={1}
-          distance={25}
-          angle={Math.PI / 4}
-          penumbra={1}
-          decay={0.5}
-          shadow-mapSize={[2048, 2048]}
-        ></spotLight>
-        <ambientLight intensity={0.05}></ambientLight>
+        <fog attach="fog" args={['#000000', 20, 70]} />
+        {light}
         <Suspense fallback={null}>
           <GamepadModel url={gamepadModel} castShadow receiveShadow />
           <mesh
