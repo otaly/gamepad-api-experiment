@@ -1,20 +1,36 @@
 import { css } from '@emotion/react';
-import { MeshReflectorMaterial, OrbitControls } from '@react-three/drei';
+import { OrbitControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
-import React, { Suspense, useEffect, useState } from 'react';
+import { GUI } from 'dat.gui';
+import React, { Ref, Suspense, useEffect, useRef, useState } from 'react';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import gamepadModel from 'src/assets/models/gamepad.glb';
 import { getGamepads } from 'src/util/GetGamepad';
+import { ColorRepresentation } from 'three';
 import { GamepadModel } from '../models/Gamepad';
 
 const App = () => {
-  const [{ isGamepadConnected, checked }, setState] = useState({
+  const [{ isGamepadConnected, checked, gamepadColor }, setState] = useState({
     isGamepadConnected: false,
     checked: false,
+    gamepadColor: 0xffffff as ColorRepresentation,
   });
 
+  const planeMatRef: Ref<THREE.MeshPhongMaterial> = useRef(null);
   useEffect(() => {
+    const gui = new GUI();
+    const planeFolder = gui.addFolder('Floor');
+    planeFolder
+      .addColor({ color: 0xffffff }, 'color')
+      .onChange((v) => planeMatRef.current?.color.set(v));
+    planeFolder.open();
+    const gamepadFolder = gui.addFolder('Gamepad');
+    gamepadFolder
+      .addColor({ color: 0xffffff }, 'color')
+      .onChange((v) => setState((s) => ({ ...s, gamepadColor: v })));
+    gamepadFolder.open();
+
     const windowListenerMap: Record<
       'gamepadconnected' | 'gamepaddisconnected',
       ((ev: Event) => void) | null
@@ -65,7 +81,7 @@ const App = () => {
     <>
       <spotLight
         castShadow
-        position={[10, 10, 5]}
+        position={[0, 10, 11.2]}
         color={0xffedd9}
         intensity={1.3}
         distance={25}
@@ -75,23 +91,23 @@ const App = () => {
         shadow-mapSize={[2048, 2048]}
       ></spotLight>
       <directionalLight
-        position={[-7, 2, -5]}
+        position={[2, 3.5, -8.4]}
         color={0xabe2ff}
-        intensity={0.6}
+        intensity={0.35}
       ></directionalLight>
     </>,
   ];
-  const light = lights[checked ? 1 : 0];
+  const light = lights[checked ? 0 : 1];
 
   const status = isGamepadConnected ? (
     <p
-      className="text-green-400 text-4xl text-center animate-fadeout"
+      className="text-green-400 tracking-wide text-4xl text-center animate-fadeout"
       css={css({ animationDelay: '1s' })}
     >
       Connected!!!
     </p>
   ) : (
-    <p className="text-white text-4xl text-center animate-pulse">
+    <p className="text-white tracking-wide text-4xl text-center animate-pulse">
       Disconnected
     </p>
   );
@@ -99,7 +115,7 @@ const App = () => {
   return (
     <>
       <div className="absolute w-full top-0 z-10 p-4 pointer-events-none">
-        <p className="text-5xl font-medium text-white mb-4">
+        <p className="text-5xl font-medium text-white tracking-wider mb-4">
           Gamepad API Experiment
         </p>
         <input
@@ -109,19 +125,29 @@ const App = () => {
         />
         {status}
       </div>
-      <Canvas shadows camera={{ position: [0, 7, 15], fov: 45, aspect: 1 }}>
+      <Canvas
+        shadows
+        camera={{ position: [0, 8, 13], fov: 45, aspect: 1 }}
+        className="cursor-grab"
+      >
         <color attach="background" args={['black']} />
-        <fog attach="fog" args={['#000000', 20, 70]} />
+        <fog attach="fog" args={['#000000', 20, 60]} />
         {light}
         <Suspense fallback={null}>
-          <GamepadModel url={gamepadModel} castShadow receiveShadow />
+          <GamepadModel
+            url={gamepadModel}
+            color={gamepadColor}
+            castShadow
+            receiveShadow
+            rotation={[0, -Math.PI / 2, 0]}
+          />
           <mesh
             receiveShadow
             rotation={[-Math.PI / 2, 0, 0]}
             position={[0, -1.5, 0]}
           >
-            <planeGeometry args={[100, 100]} />
-            <MeshReflectorMaterial
+            <planeGeometry args={[150, 150]} />
+            {/* <MeshReflectorMaterial
               mirror={0.4}
               blur={[400, 100]}
               resolution={1024}
@@ -131,15 +157,15 @@ const App = () => {
               minDepthThreshold={0.4}
               maxDepthThreshold={1.25}
               roughness={0.7}
-            />
-            {/* <meshPhongMaterial color={0xffffff} /> */}
+            /> */}
+            <meshPhongMaterial ref={planeMatRef} color={0xffffff} />
           </mesh>
           {/* <Environment preset="night"></Environment> */}
         </Suspense>
         <OrbitControls
-          zoomSpeed={0.4}
+          zoomSpeed={0.3}
           autoRotate
-          autoRotateSpeed={-0.4}
+          autoRotateSpeed={0.4}
           rotateSpeed={1}
           enableDamping
           dampingFactor={0.2}

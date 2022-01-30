@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import React, { useMemo } from 'react';
 import { Sync } from 'src/services/Sync';
 import * as THREE from 'three';
+import { ColorRepresentation } from 'three';
 import { GLTF } from 'three-stdlib';
 
 export type GLTFResult = GLTF & {
@@ -35,7 +36,10 @@ export type GLTFResult = GLTF & {
 };
 
 export const GamepadModel = (
-  props: JSX.IntrinsicElements['group'] & { url: string }
+  props: JSX.IntrinsicElements['group'] & {
+    url: string;
+    color?: ColorRepresentation;
+  }
 ) => {
   const { url, ...modelProps } = props;
   const gltf = useGLTF(url) as GLTFResult;
@@ -50,6 +54,14 @@ export const GamepadModel = (
     sync.setNodes(gltf.nodes);
     return [gltf.scene, sync];
   }, [gltf.scene, gltf.nodes]);
+
+  useMemo(() => {
+    if (!props.color) {
+      return;
+    }
+    const body = gltf.scene.getObjectByName('body') as THREE.Mesh;
+    (body.material as THREE.MeshStandardMaterial).color.set(props.color);
+  }, [gltf.scene, props.color]);
   useFrame(() => {
     sync.update();
   });
