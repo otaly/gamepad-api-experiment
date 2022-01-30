@@ -7,19 +7,19 @@ const STICK_MAX_ANGLE = Math.PI / 9;
 
 export class Sync {
   static instance: Sync;
-  private lastState: boolean[] | null = null;
+  private lastState: ButtonState | null = null;
   nodes: OperableModel[] = [];
   private nodeMap: { [key in ModelNodeKeys]: OperableModel } = {
     x_btn: { mesh: null, maxPressedPos: { x: 0, y: -0.06, z: 0 } },
     circle_btn: { mesh: null, maxPressedPos: { x: 0, y: -0.06, z: 0 } },
     square_btn: { mesh: null, maxPressedPos: { x: 0, y: -0.06, z: 0 } },
     triangle_btn: { mesh: null, maxPressedPos: { x: 0, y: -0.06, z: 0 } },
-    l_btn: { mesh: null, maxPressedPos: { x: 0, y: -0.06, z: 0 } },
-    r_btn: { mesh: null, maxPressedPos: { x: 0, y: -0.06, z: 0 } },
-    trigger_l: { mesh: null, maxPressedPos: { x: 0, y: -0.06, z: 0 } },
-    trigger_r: { mesh: null, maxPressedPos: { x: 0, y: -0.06, z: 0 } },
-    share_btn: { mesh: null, maxPressedPos: { x: 0, y: -0.02, z: 0 } },
-    options_btn: { mesh: null, maxPressedPos: { x: 0, y: -0.02, z: 0 } },
+    l_btn: { mesh: null, maxPressedPos: { x: 0.07, y: 0, z: 0 } },
+    r_btn: { mesh: null, maxPressedPos: { x: 0.07, y: 0, z: 0 } },
+    trigger_l: { mesh: null, maxPressedAngl: { x: 0, y: 0, z: 0.5 } },
+    trigger_r: { mesh: null, maxPressedAngl: { x: 0, y: 0, z: 0.5 } },
+    share_btn: { mesh: null, maxPressedPos: { x: 0, y: -0.018, z: 0 } },
+    options_btn: { mesh: null, maxPressedPos: { x: 0, y: -0.018, z: 0 } },
     analog_stick_l: { mesh: null, maxPressedPos: { x: 0, y: -0.04, z: 0 } },
     analog_stick_r: { mesh: null, maxPressedPos: { x: 0, y: -0.04, z: 0 } },
     up_btn: { mesh: null, maxPressedPos: { x: 0, y: -0.06, z: 0 } },
@@ -51,21 +51,29 @@ export class Sync {
 
   update() {
     this.operateGamepadBtns((state, lastState, axes) => {
-      state.forEach((pressed, index) => {
+      state.forEach(({ pressed, value }, index) => {
         const btnModel = this.nodes[index];
-        if (!btnModel.mesh || !btnModel.maxPressedPos) {
+        if (!btnModel.mesh) {
           return;
         }
-        const wasPressed = lastState[index];
-        const { x, y, z } = btnModel.maxPressedPos;
-        if (pressed && !wasPressed) {
-          btnModel.mesh.position.x += x;
-          btnModel.mesh.position.y += y;
-          btnModel.mesh.position.z += z;
-        } else if (!pressed && wasPressed) {
-          btnModel.mesh.position.x -= x;
-          btnModel.mesh.position.y -= y;
-          btnModel.mesh.position.z -= z;
+
+        if (btnModel.maxPressedPos) {
+          const { x, y, z } = btnModel.maxPressedPos;
+          const wasPressed = lastState[index].pressed;
+          if (pressed && !wasPressed) {
+            btnModel.mesh.position.x += x;
+            btnModel.mesh.position.y += y;
+            btnModel.mesh.position.z += z;
+          } else if (!pressed && wasPressed) {
+            btnModel.mesh.position.x -= x;
+            btnModel.mesh.position.y -= y;
+            btnModel.mesh.position.z -= z;
+          }
+        }
+
+        if (btnModel.maxPressedAngl) {
+          const { x, y, z } = btnModel.maxPressedAngl;
+          btnModel.mesh.rotation.set(x * value, y * value, z * value);
         }
       });
 
@@ -84,8 +92,8 @@ export class Sync {
 
   private operateGamepadBtns(
     listener: (
-      state: boolean[],
-      lastState: boolean[],
+      state: ButtonState,
+      lastState: ButtonState,
       axes: readonly number[]
     ) => void
   ) {
@@ -93,8 +101,12 @@ export class Sync {
     if (!gamepad) {
       return;
     }
-    const state = gamepad.buttons.map((button) => button.pressed);
-    const lastState = this.lastState ?? state.map(() => false);
+    const state = gamepad.buttons.map(({ pressed, value }) => ({
+      pressed,
+      value,
+    }));
+    const lastState =
+      this.lastState ?? state.map(() => ({ pressed: false, value: 0 }));
     listener(state, lastState, gamepad.axes);
     this.lastState = state;
   }
@@ -105,4 +117,7 @@ type ModelNodeKeys = keyof GLTFResult['nodes'];
 type OperableModel = {
   mesh: THREE.Mesh | null;
   maxPressedPos?: { x: number; y: number; z: number };
+  maxPressedAngl?: { x: number; y: number; z: number };
 };
+
+type ButtonState = { pressed: boolean; value: number }[];
