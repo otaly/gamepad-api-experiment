@@ -7,6 +7,7 @@ import React, { Ref, Suspense, useEffect, useRef, useState } from 'react';
 import gamepadModel from 'src/assets/models/gamepad.glb';
 import { ColorRepresentation } from 'three';
 import { GamepadModel } from '../models/Gamepad';
+import InfoPanel from './InfoPanel';
 import Status from './Status';
 
 const App = () => {
@@ -39,6 +40,7 @@ const App = () => {
           Gamepad API Experiment
         </h1>
         <Status />
+        <InfoPanel />
       </div>
       <Canvas
         shadows
