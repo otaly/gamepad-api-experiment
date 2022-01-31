@@ -2,6 +2,7 @@
   "name": "gamepad-api-experiment",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/gamepad-api-experiment/",
   "dependencies": {
     "@babel/preset-react": "^7.16.7",
     "@emotion/babel-plugin": "^11.7.2",
