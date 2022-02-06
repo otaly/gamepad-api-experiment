@@ -72,6 +72,7 @@ const vibrate = (
     strongMagnitude?: number;
   }
 ) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (gamepad as any).vibrationActuator.playEffect('dual-rumble', {
     weakMagnitude: 1,
     strongMagnitude: 1,
