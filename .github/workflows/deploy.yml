@@ -24,11 +24,6 @@ jobs:
       - name: Create sitemap.xml
         run: LASTMOD=`date "+%Y-%m-%dT%H:%M:%SZ"` envsubst < sitemap.template.xml > public/sitemap.xml
 
-      - name: Show sitemap.xml
-        run: cat public/sitemap.xml
-
-      - run: ls public
-
       - name: Build
         run: npm run build
 
