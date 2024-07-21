@@ -1,6 +1,10 @@
-# Getting Started with Create React App
+# Gamepad API Experiment
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A sample using [Gamepad API](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API)
+
+## GitHub Pages
+
+https://otaly.github.io/gamepad-api-experiment/
 
 ## Available Scripts
 

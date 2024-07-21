@@ -1,6 +1,6 @@
 import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Sync } from 'src/services/Sync';
 import * as THREE from 'three';
 import { ColorRepresentation } from 'three';
@@ -55,7 +55,7 @@ export const GamepadModel = (
     return [gltf.scene, sync];
   }, [gltf.scene, gltf.nodes]);
 
-  useMemo(() => {
+  useEffect(() => {
     if (!props.color) {
       return;
     }

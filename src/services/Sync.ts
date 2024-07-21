@@ -57,7 +57,7 @@ export class Sync {
           return;
         }
 
-        if (btnModel.maxPressedPos) {
+        if ('maxPressedPos' in btnModel) {
           const { x, y, z } = btnModel.maxPressedPos;
           const wasPressed = lastState[index].pressed;
           if (pressed && !wasPressed) {
@@ -71,7 +71,7 @@ export class Sync {
           }
         }
 
-        if (btnModel.maxPressedAngl) {
+        if ('maxPressedAngl' in btnModel) {
           const { x, y, z } = btnModel.maxPressedAngl;
           btnModel.mesh.rotation.set(x * value, y * value, z * value);
         }
@@ -114,10 +114,17 @@ export class Sync {
 
 type ModelNodeKeys = keyof GLTFResult['nodes'];
 
-type OperableModel = {
-  mesh: THREE.Mesh | null;
-  maxPressedPos?: { x: number; y: number; z: number };
-  maxPressedAngl?: { x: number; y: number; z: number };
-};
+type OperableModel =
+  | {
+      mesh: THREE.Mesh | null;
+    }
+  | {
+      mesh: THREE.Mesh | null;
+      maxPressedPos: { x: number; y: number; z: number };
+    }
+  | {
+      mesh: THREE.Mesh | null;
+      maxPressedAngl: { x: number; y: number; z: number };
+    };
 
 type ButtonState = { pressed: boolean; value: number }[];
