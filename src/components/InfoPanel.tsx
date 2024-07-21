@@ -27,23 +27,26 @@ const InfoPanel = () => {
   const arrow = isOpen ? '<<' : '>>';
 
   const translateX = infoArea.current
-    ? `calc(${-infoArea.current.offsetWidth}px - 1rem)`
-    : '0px';
+    ? `calc(${infoArea.current.offsetWidth}px + 1rem)`
+    : '600px';
+
+  useEffect(() => console.log(translateX), [translateX])
 
   return (
-    <div className="text-slate-300 inline-block">
-      <p
+    <div className="text-slate-300 inline-block relative">
+      <button
         className="text-lg font-medium pointer-events-auto cursor-pointer mb-2"
         onClick={() => setState((s) => ({ ...s, isOpen: !s.isOpen }))}
       >
         <span className="mr-2">{arrow}</span>
         Info
-      </p>
+      </button>
       <div
         ref={infoArea}
-        className="transition-transform"
+        className="transition-transform relative"
         css={css({
-          transform: `translateX(${isOpen ? '0px' : translateX})`,
+          right: translateX,
+          transform: `translateX(${isOpen ? translateX : '0px'})`,
         })}
       >
         <p>ID: {gamepad?.id}</p>
@@ -68,7 +71,7 @@ const InfoPanel = () => {
           ))}
         </ul>
         <button
-          className="px-7 py-1 font-medium border rounded pointer-events-auto"
+          className="px-7 py-1 mt-4 font-medium border rounded pointer-events-auto"
           type="button"
           onClick={() =>
             gamepad
