@@ -8,6 +8,7 @@ import THREE, { ColorRepresentation } from 'three';
 import { GamepadModel } from '../models/Gamepad';
 import InfoPanel from './InfoPanel';
 import Status from './Status';
+import { Title } from './Title';
 
 const App = () => {
   const [{ gamepadColor }, setState] = useState({
@@ -35,14 +36,11 @@ const App = () => {
 
   return (
     <>
-      <div className="absolute w-full top-0 z-10 p-4 pointer-events-none">
-        <h1
-          className="text-5xl font-medium text-white tracking-wider mb-4"
-          translate="no"
-        >
-          Gamepad API Experiment
-        </h1>
-        <Status />
+      <div className="absolute inset-0 z-10 p-4 pointer-events-none">
+        <Title />
+        <div className='absolute left-0 bottom-4 w-full sm:static'>
+          <Status />
+        </div>
         <InfoPanel />
       </div>
       <Canvas
