@@ -41,7 +41,7 @@ const InfoPanel = () => {
       </button>
       <div
         ref={infoArea}
-        className="transition-transform relative"
+        className={`transition-[transform,opacity] relative ${!isOpen && 'opacity-0'}`}
         css={css({
           right: translateX,
           transform: `translateX(${isOpen ? translateX : '0px'})`,
