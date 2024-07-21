@@ -1,7 +1,7 @@
 import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import React, { useEffect, useMemo } from 'react';
-import { Sync } from 'src/services/Sync';
+import { useEffect, useMemo } from 'react';
+import { Sync } from 'services/Sync';
 import * as THREE from 'three';
 import { ColorRepresentation } from 'three';
 import { GLTF } from 'three-stdlib';

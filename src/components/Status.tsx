@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
-import React, { useEffect, useState } from 'react';
-import { getGamepads } from 'src/util/GetGamepad';
+import { useEffect, useState } from 'react';
+import { getGamepads } from 'util/GetGamepad';
 
 const Status = () => {
   const [{ isGamepadConnected }, setState] = useState({

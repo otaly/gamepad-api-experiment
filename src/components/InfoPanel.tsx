@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
-import React, { useEffect, useRef, useState } from 'react';
-import { getGamepad } from 'src/util/GetGamepad';
+import { useEffect, useRef, useState } from 'react';
+import { getGamepad } from 'util/GetGamepad';
 
 const InfoPanel = () => {
   const [{ gamepad, isOpen }, setState] = useState({
@@ -91,7 +91,6 @@ const vibrate = (
     strongMagnitude?: number;
   }
 ) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (gamepad as any).vibrationActuator.playEffect('dual-rumble', {
     weakMagnitude: 1,
     strongMagnitude: 1,

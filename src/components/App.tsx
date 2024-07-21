@@ -1,11 +1,10 @@
 import { Environment, OrbitControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
-import { GUI } from 'dat.gui';
-import React, { Ref, Suspense, useEffect, useRef, useState } from 'react';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import gamepadModel from 'src/assets/models/gamepad.glb';
-import { ColorRepresentation } from 'three';
+import gamepadModel from 'assets/models/gamepad.glb';
+import { GUI } from 'dat.gui';
+import { Ref, Suspense, useEffect, useRef, useState } from 'react';
+import THREE, { ColorRepresentation } from 'three';
 import { GamepadModel } from '../models/Gamepad';
 import InfoPanel from './InfoPanel';
 import Status from './Status';
@@ -28,6 +27,10 @@ const App = () => {
       .addColor({ color: 0xffffff }, 'color')
       .onChange((v) => setState((s) => ({ ...s, gamepadColor: v })));
     gamepadFolder.open();
+
+    return () => {
+      gui.destroy();
+    };
   }, []);
 
   return (
@@ -44,7 +47,7 @@ const App = () => {
       </div>
       <Canvas
         shadows
-        camera={{ position: [0, 8, 13], fov: 45, aspect: 1 }}
+        camera={{ position: [0, 8, 13], fov: 45 }}
         className="cursor-grab select-none"
       >
         <color attach="background" args={['black']} />
@@ -53,17 +56,17 @@ const App = () => {
           castShadow
           position={[0, 10, 11.2]}
           color={0xffedd9}
-          intensity={1.3}
+          intensity={10.6}
           distance={25}
           angle={Math.PI / 4}
-          penumbra={1}
+          penumbra={0.6}
           decay={0.6}
           shadow-mapSize={[2048, 2048]}
         ></spotLight>
         <directionalLight
           position={[2, 3.5, -8.4]}
           color={0xabe2ff}
-          intensity={0.35}
+          intensity={0.95}
         ></directionalLight>
         <Suspense fallback={null}>
           <GamepadModel

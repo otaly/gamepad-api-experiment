@@ -1,5 +1,5 @@
-import { GLTFResult } from 'src/models/Gamepad';
-import { getGamepad } from 'src/util/GetGamepad';
+import { GLTFResult } from 'models/Gamepad';
+import { getGamepad } from 'util/GetGamepad';
 import * as THREE from 'three';
 
 // アナログスティックの傾きの最大角
