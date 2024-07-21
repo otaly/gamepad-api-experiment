@@ -30,8 +30,6 @@ const InfoPanel = () => {
     ? `calc(${infoArea.current.offsetWidth}px + 1rem)`
     : '600px';
 
-  useEffect(() => console.log(translateX), [translateX])
-
   return (
     <div className="text-slate-300 inline-block relative">
       <button
