@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/gamepad-api-experiment/static/css/main.d7c218f6.css",
-    "main.js": "/gamepad-api-experiment/static/js/main.a2a95bf8.js",
-    "static/js/787.f9486505.chunk.js": "/gamepad-api-experiment/static/js/787.f9486505.chunk.js",
+    "main.css": "/gamepad-api-experiment/static/css/main.f8b6ece8.css",
+    "main.js": "/gamepad-api-experiment/static/js/main.cc3f6711.js",
+    "static/js/453.f81a74b6.chunk.js": "/gamepad-api-experiment/static/js/453.f81a74b6.chunk.js",
     "static/media/gamepad.glb": "/gamepad-api-experiment/static/media/gamepad.520d2378604b75064ab7.glb",
     "index.html": "/gamepad-api-experiment/index.html",
-    "main.d7c218f6.css.map": "/gamepad-api-experiment/static/css/main.d7c218f6.css.map",
-    "main.a2a95bf8.js.map": "/gamepad-api-experiment/static/js/main.a2a95bf8.js.map",
-    "787.f9486505.chunk.js.map": "/gamepad-api-experiment/static/js/787.f9486505.chunk.js.map"
+    "main.f8b6ece8.css.map": "/gamepad-api-experiment/static/css/main.f8b6ece8.css.map",
+    "main.cc3f6711.js.map": "/gamepad-api-experiment/static/js/main.cc3f6711.js.map",
+    "453.f81a74b6.chunk.js.map": "/gamepad-api-experiment/static/js/453.f81a74b6.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.d7c218f6.css",
-    "static/js/main.a2a95bf8.js"
+    "static/css/main.f8b6ece8.css",
+    "static/js/main.cc3f6711.js"
   ]
 }
