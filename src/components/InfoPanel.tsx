@@ -15,9 +15,9 @@ export const InfoPanel = () => {
     : '600px';
 
   return (
-    <div className="text-slate-300 inline-block relative">
+    <div className="relative inline-block text-slate-300">
       <button
-        className="text-lg font-medium pointer-events-auto cursor-pointer mb-2"
+        className="pointer-events-auto mb-2 cursor-pointer text-lg font-medium"
         onClick={() => setIsOpen(!isOpen)}
       >
         <span className="mr-2">{arrow}</span>
@@ -25,7 +25,7 @@ export const InfoPanel = () => {
       </button>
       <div
         ref={infoArea}
-        className={`transition-[transform,opacity] relative ${!isOpen && 'opacity-0'}`}
+        className={`relative transition-[transform,opacity] ${!isOpen && 'opacity-0'}`}
         css={css({
           right: translateX,
           transform: `translateX(${isOpen ? translateX : '0px'})`,
@@ -53,7 +53,7 @@ export const InfoPanel = () => {
           ))}
         </ul>
         <button
-          className="px-7 py-1 mt-4 font-medium border rounded pointer-events-auto"
+          className="pointer-events-auto mt-4 rounded border px-7 py-1 font-medium"
           type="button"
           onClick={() =>
             gamepad

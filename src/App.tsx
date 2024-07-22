@@ -33,9 +33,9 @@ const App = () => {
 
   return (
     <>
-      <div className="absolute inset-0 z-10 p-4 pointer-events-none">
+      <div className="pointer-events-none absolute inset-0 z-10 p-4">
         <Title />
-        <div className="absolute left-0 bottom-4 w-full sm:static">
+        <div className="absolute bottom-4 left-0 w-full sm:static">
           <Status />
         </div>
         <InfoPanel />
