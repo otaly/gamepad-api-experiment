@@ -1,10 +1,10 @@
 import { Environment, OrbitControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
-// @ts-ignore
-import gamepadModel from 'assets/models/gamepad.glb';
 import { GUI } from 'lil-gui';
 import { Ref, Suspense, useEffect, useRef, useState } from 'react';
 import THREE, { ColorRepresentation } from 'three';
+// @ts-expect-error 3D model file
+import gamepadModel from './assets/models/gamepad.glb';
 import { InfoPanel } from './components/InfoPanel';
 import { Status } from './components/Status';
 import { Title } from './components/Title';

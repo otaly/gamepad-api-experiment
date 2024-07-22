@@ -1,8 +1,8 @@
 import { useFrame } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
-import { GLTFResult, NodeNames } from 'types';
-import { getGamepad } from 'util/getGamepad';
+import { GLTFResult, NodeNames } from '../types';
+import { getGamepad } from '../util/getGamepad';
 
 // アナログスティックの傾きの最大角
 const STICK_MAX_ANGLE = Math.PI / 9;

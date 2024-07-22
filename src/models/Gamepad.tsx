@@ -1,10 +1,11 @@
 import { useGLTF } from '@react-three/drei';
-import { useSyncGamepad } from 'hooks';
 import { useEffect, useMemo } from 'react';
 import * as THREE from 'three';
 import { ColorRepresentation } from 'three';
-import { GLTFResult } from 'types';
+import { useSyncGamepad } from '../hooks';
+import { GLTFResult } from '../types';
 
+// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 type Props = JSX.IntrinsicElements['group'] & {
   url: string;
   color?: ColorRepresentation;

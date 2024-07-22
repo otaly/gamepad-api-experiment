@@ -1,4 +1,4 @@
-build/
+dist/
 public/
 docs/
 **/node_modules/

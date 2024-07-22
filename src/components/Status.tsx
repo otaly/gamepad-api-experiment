@@ -1,4 +1,4 @@
-import { useIsGamepadConnected } from 'hooks';
+import { useIsGamepadConnected } from '../hooks';
 
 export const Status = () => {
   const { isGamepadConnected } = useIsGamepadConnected();

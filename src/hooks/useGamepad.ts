@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getGamepad } from 'util/getGamepad';
+import { getGamepad } from '../util/getGamepad';
 
 export const useGamepad = () => {
   const [gamepad, setGamepad] = useState<Gamepad>();
