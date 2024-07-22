@@ -1,28 +1,12 @@
 import { css } from '@emotion/react';
-import { useEffect, useRef, useState } from 'react';
-import { getGamepad } from 'util/GetGamepad';
+import { useGamepad } from 'hooks';
+import { useRef, useState } from 'react';
 
-const InfoPanel = () => {
-  const [{ gamepad, isOpen }, setState] = useState({
-    gamepad: null as Gamepad | null,
-    isOpen: false,
-  });
+export const InfoPanel = () => {
+  const { gamepad } = useGamepad();
+  const [isOpen, setIsOpen] = useState(false);
 
   const infoArea = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    let reqAnimId: number;
-    const update = () => {
-      reqAnimId = requestAnimationFrame(update);
-      setState((s) => ({ ...s, gamepad: getGamepad() ?? null }));
-    };
-
-    update();
-
-    return () => {
-      cancelAnimationFrame(reqAnimId);
-    };
-  }, []);
 
   const arrow = isOpen ? '<<' : '>>';
 
@@ -34,7 +18,7 @@ const InfoPanel = () => {
     <div className="text-slate-300 inline-block relative">
       <button
         className="text-lg font-medium pointer-events-auto cursor-pointer mb-2"
-        onClick={() => setState((s) => ({ ...s, isOpen: !s.isOpen }))}
+        onClick={() => setIsOpen(!isOpen)}
       >
         <span className="mr-2">{arrow}</span>
         Info
@@ -98,5 +82,3 @@ const vibrate = (
     ...options,
   });
 };
-
-export default InfoPanel;

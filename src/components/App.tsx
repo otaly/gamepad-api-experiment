@@ -6,8 +6,8 @@ import { GUI } from 'dat.gui';
 import { Ref, Suspense, useEffect, useRef, useState } from 'react';
 import THREE, { ColorRepresentation } from 'three';
 import { GamepadModel } from '../models/Gamepad';
-import InfoPanel from './InfoPanel';
-import Status from './Status';
+import { InfoPanel } from './InfoPanel';
+import { Status } from './Status';
 import { Title } from './Title';
 
 const App = () => {

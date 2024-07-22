@@ -1,6 +1,6 @@
 import { GLTFResult } from 'models/Gamepad';
-import { getGamepad } from 'util/GetGamepad';
 import * as THREE from 'three';
+import { getGamepad } from 'util/getGamepad';
 
 // アナログスティックの傾きの最大角
 const STICK_MAX_ANGLE = Math.PI / 9;
@@ -84,8 +84,8 @@ export class Sync {
         stick?.rotation.set(
           -(axes[0 + index * 2] * STICK_MAX_ANGLE),
           stick.rotation.y,
-          -(axes[1 + index * 2] * STICK_MAX_ANGLE)
-        )
+          -(axes[1 + index * 2] * STICK_MAX_ANGLE),
+        ),
       );
     });
   }
@@ -94,8 +94,8 @@ export class Sync {
     listener: (
       state: ButtonState,
       lastState: ButtonState,
-      axes: readonly number[]
-    ) => void
+      axes: readonly number[],
+    ) => void,
   ) {
     const gamepad = getGamepad();
     if (!gamepad) {
