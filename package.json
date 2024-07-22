@@ -16,7 +16,7 @@
     "@types/node": "^16.18.103",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "dat.gui": "^0.7.9",
+    "lil-gui": "^0.19.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-scripts": "^5.0.1",
@@ -47,7 +47,6 @@
   "devDependencies": {
     "@craco/craco": "^7.1.0",
     "@eslint/js": "^9.7.0",
-    "@types/dat.gui": "^0.7.13",
     "@types/three": "^0.166.0",
     "autoprefixer": "^10.4.2",
     "eslint": "^8.57.0",

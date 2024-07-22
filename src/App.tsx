@@ -2,7 +2,7 @@ import { Environment, OrbitControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 // @ts-ignore
 import gamepadModel from 'assets/models/gamepad.glb';
-import { GUI } from 'dat.gui';
+import { GUI } from 'lil-gui';
 import { Ref, Suspense, useEffect, useRef, useState } from 'react';
 import THREE, { ColorRepresentation } from 'three';
 import { InfoPanel } from './components/InfoPanel';
@@ -11,23 +11,20 @@ import { Title } from './components/Title';
 import { GamepadModel } from './models/Gamepad';
 
 const App = () => {
-  const [{ gamepadColor }, setState] = useState({
-    gamepadColor: 0xffffff as ColorRepresentation,
-  });
+  const [gamepadColor, setGamepadColor] =
+    useState<ColorRepresentation>(0xffffff);
 
   const planeMatRef: Ref<THREE.MeshPhongMaterial> = useRef(null);
   useEffect(() => {
     const gui = new GUI();
-    const planeFolder = gui.addFolder('Floor');
-    planeFolder
+    gui
       .addColor({ color: 0xffffff }, 'color')
-      .onChange((v) => planeMatRef.current?.color.set(v));
-    planeFolder.open();
-    const gamepadFolder = gui.addFolder('Gamepad');
-    gamepadFolder
+      .name('Gamepad Color')
+      .onChange((v: ColorRepresentation) => setGamepadColor(v));
+    gui
       .addColor({ color: 0xffffff }, 'color')
-      .onChange((v) => setState((s) => ({ ...s, gamepadColor: v })));
-    gamepadFolder.open();
+      .name('Floor Color')
+      .onChange((v: ColorRepresentation) => planeMatRef.current?.color.set(v));
 
     return () => {
       gui.destroy();
