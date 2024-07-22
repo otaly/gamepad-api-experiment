@@ -38,7 +38,7 @@ const App = () => {
     <>
       <div className="absolute inset-0 z-10 p-4 pointer-events-none">
         <Title />
-        <div className='absolute left-0 bottom-4 w-full sm:static'>
+        <div className="absolute left-0 bottom-4 w-full sm:static">
           <Status />
         </div>
         <InfoPanel />

@@ -1,0 +1,4 @@
+build/
+public/
+docs/
+**/node_modules/

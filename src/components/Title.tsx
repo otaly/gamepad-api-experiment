@@ -5,4 +5,4 @@ export const Title = () => (
   >
     Gamepad API Experiment
   </h1>
-)
+);

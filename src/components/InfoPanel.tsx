@@ -74,7 +74,7 @@ const vibrate = (
     duration: number;
     weakMagnitude?: number;
     strongMagnitude?: number;
-  }
+  },
 ) => {
   (gamepad as any).vibrationActuator.playEffect('dual-rumble', {
     weakMagnitude: 1,

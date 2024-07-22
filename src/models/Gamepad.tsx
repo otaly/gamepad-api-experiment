@@ -39,7 +39,7 @@ export const GamepadModel = (
   props: JSX.IntrinsicElements['group'] & {
     url: string;
     color?: ColorRepresentation;
-  }
+  },
 ) => {
   const { url, ...modelProps } = props;
   const gltf = useGLTF(url) as GLTFResult;
