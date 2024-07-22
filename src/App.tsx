@@ -5,10 +5,10 @@ import gamepadModel from 'assets/models/gamepad.glb';
 import { GUI } from 'dat.gui';
 import { Ref, Suspense, useEffect, useRef, useState } from 'react';
 import THREE, { ColorRepresentation } from 'three';
-import { GamepadModel } from '../models/Gamepad';
-import { InfoPanel } from './InfoPanel';
-import { Status } from './Status';
-import { Title } from './Title';
+import { InfoPanel } from './components/InfoPanel';
+import { Status } from './components/Status';
+import { Title } from './components/Title';
+import { GamepadModel } from './models/Gamepad';
 
 const App = () => {
   const [{ gamepadColor }, setState] = useState({
