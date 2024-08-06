@@ -26,6 +26,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
+      - name: Set up Puppeteer cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/puppeteer
+          key: ${{ runner.os }}-puppeteer
+
       - name: Install
         run: npm ci
 
@@ -34,6 +40,7 @@ jobs:
         with:
           url: http://localhost:5173/gamepad-api-experiment/
           server_command: npm run dev
+          delay: 3000
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
