@@ -7,5 +7,5 @@ A sample using [Gamepad API](https://developer.mozilla.org/en-US/docs/Web/API/Ga
 https://otaly.github.io/gamepad-api-experiment/
 
 <!-- [README-SCREENSHOT-BEGIN] -->
-![http://localhost:5173/gamepad-api-experiment/](__screenshots__/gamepad-api-experiment_30e39d5.png)
+![http://localhost:5173/gamepad-api-experiment/](__screenshots__/gamepad-api-experiment_6faff63.png)
 <!-- [README-SCREENSHOT-END] -->
