@@ -5,3 +5,6 @@ A sample using [Gamepad API](https://developer.mozilla.org/en-US/docs/Web/API/Ga
 ## GitHub Pages
 
 https://otaly.github.io/gamepad-api-experiment/
+
+<!-- [README-SCREENSHOT-BEGIN] -->
+<!-- [README-SCREENSHOT-END] -->
