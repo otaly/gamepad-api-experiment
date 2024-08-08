@@ -11,5 +11,5 @@ https://otaly.github.io/gamepad-api-experiment/
 by [otaly/readme-screenshot-action](https://github.com/otaly/readme-screenshot-action)
 
 <!-- :README-SCREENSHOT-BEGIN: -->
-![http://localhost:5173/gamepad-api-experiment/](__screenshots__/gamepad-api-experiment_25a10a4.png)
+![http://localhost:5173/gamepad-api-experiment/](__screenshots__/gamepad-api-experiment_ac20076.png)
 <!-- :README-SCREENSHOT-END: -->
