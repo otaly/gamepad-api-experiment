@@ -1,6 +1,6 @@
 # Gamepad API Experiment
 
-A sample using [Gamepad API](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API) & [Three.js](https://threejs.org/)
+React / [Three.js](https://threejs.org/) / [react-three-fiber](https://docs.pmnd.rs/react-three-fiber/getting-started/introduction) & [Gamepad API](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API)
 
 ## Demo
 
