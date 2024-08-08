@@ -39,7 +39,7 @@ jobs:
       - name: Update Screenshot
         uses: otaly/readme-screenshot-action@v1.0.0
         with:
-          url: http://localhost:5173/gamepad-api-experiment/
+          urls: http://localhost:5173/gamepad-api-experiment/
           server_command: npm run dev
           delay: 3000
 
