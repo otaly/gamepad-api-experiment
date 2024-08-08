@@ -10,6 +10,6 @@ https://otaly.github.io/gamepad-api-experiment/
 
 by [otaly/readme-screenshot-action](https://github.com/otaly/readme-screenshot-action)
 
-<!-- [README-SCREENSHOT-BEGIN] -->
+<!-- :README-SCREENSHOT-BEGIN: -->
 ![http://localhost:5173/gamepad-api-experiment/](__screenshots__/gamepad-api-experiment_da99cb8.png)
-<!-- [README-SCREENSHOT-END] -->
+<!-- :README-SCREENSHOT-END: -->
