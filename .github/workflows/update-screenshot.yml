@@ -37,7 +37,7 @@ jobs:
         run: npm ci
 
       - name: Update Screenshot
-        uses: otaly/readme-screenshot-action@v1.0.0
+        uses: otaly/readme-screenshot-action@v1
         with:
           urls: http://localhost:5173/gamepad-api-experiment/
           server_command: npm run dev
